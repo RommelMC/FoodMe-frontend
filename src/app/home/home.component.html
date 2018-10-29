@@ -1,0 +1,44 @@
+<form class = "form-inline">
+  <div class="form-group mb-2">
+    <input class="form-control"[(ngModel)]= "loc.location" type="text" name="location">
+  </div>
+  <button class="btn btn-primary mb-2" (click) = "getBusinesses(loc)" type="submit">Find Food</button>
+  <button class="btn btn-info mb-2" (click)="filters=!filters">Extra Filters</button>
+  <button class="btn btn-info mb-2" (click)="showReviews=!showReviews">Show Reviews</button>
+  <span *ngIf="filters==true">
+    Radius:
+    <input class="form-control" type="number" [(ngModel)] = "loc.radius" name="radius" value=10000 min=5000>
+    Max Price:
+    <input class="form-control" type="number" [(ngModel)] = "loc.price" name="radius" min="1" max="4">
+  </span>
+  <div *ngIf="curPlace!=undefined && showReviews==true">
+    <h5>Reviews:</h5>
+    <ul>
+      <li *ngFor="let item of reviews.reviews"><a href="{{item.url}}"><span style="font-weight: bold">{{item.rating}}:</span> {{item.text}}</a></li>
+    </ul>
+  </div>
+</form>
+<div *ngIf="curPlace!=undefined">
+  <agm-map [latitude]='curPlace.coordinates.latitude' [longitude]='curPlace.coordinates.longitude'>
+    <agm-marker [latitude]='curPlace.coordinates.latitude' [longitude]='curPlace.coordinates.longitude'>
+      <agm-info-window [isOpen]=true>
+          <h4><a href="{{curPlace.url}}">{{curPlace.name}}</a></h4>
+          <div>{{categories}}</div>
+          <div>Rating: {{curPlace.rating}}</div>
+          <div>Price: {{curPlace.price}}</div>
+
+          <p></p>
+          <div>{{curPlace.location.display_address[0]}}</div>
+          <div>{{curPlace.location.display_address[1]}}</div>
+          <p></p>
+
+          <p><img src="{{curPlace.image_url}}" alt="image" style="width:200px;height:200px;"></p>
+      </agm-info-window>
+  </agm-marker>
+  </agm-map>
+</div>
+<agm-map [latitude]=34 [longitude]=-118 *ngIf="curPlace==undefined">
+  <agm-marker [latitude]=34 [longitude]=-118><agm-info-window [isOpen]=true><h3>Type in a location above to find a random place to eat!</h3></agm-info-window></agm-marker>
+</agm-map>
+<!-- <button (click) = "getBusinesses(loc)">GET RANDOM FOOD</button> -->
+
